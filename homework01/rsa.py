@@ -26,8 +26,10 @@ def gcd(a, b):
     1
     """
     # PUT YOUR CODE HERE
-
-    pass
+    if a == 0: 
+        return b
+    else:
+        return gcd(b % a, a)
 
 def multiplicative_inverse(e, phi):
     """
