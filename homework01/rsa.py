@@ -13,7 +13,7 @@ def is_prime(n):
     False
     """
     # PUT YOUR CODE HERE
-    pass
+    return (2 ** n - 2) % n == 0
 
 
 def gcd(a, b):
@@ -26,8 +26,8 @@ def gcd(a, b):
     1
     """
     # PUT YOUR CODE HERE
-    pass
 
+    pass
 
 def multiplicative_inverse(e, phi):
     """
@@ -38,6 +38,7 @@ def multiplicative_inverse(e, phi):
     23
     """
     # PUT YOUR CODE HERE
+
     pass
 
 
