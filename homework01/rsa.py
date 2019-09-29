@@ -40,9 +40,17 @@ def multiplicative_inverse(e, phi):
     23
     """
     # PUT YOUR CODE HERE
-
-    pass
-
+    f1 = e
+    f2 = phi
+    x0, x1, y0, y1 = 0, 1, 1, 0
+    while e != 0:
+        c, phi, e = phi // e, e, phi % e
+        y0, y1 = y1, y0 - c * y1
+        x0, x1 = x1, x0 - c * x1
+    if f1 > f2:
+        return y0 % f1
+    else:
+        return x0 % f2
 
 def generate_keypair(p, q):
     if not (is_prime(p) and is_prime(q)):
