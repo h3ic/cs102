@@ -26,10 +26,11 @@ def gcd(a, b):
     1
     """
     # PUT YOUR CODE HERE
-    if a == 0: 
+    if a == 0:
         return b
     else:
         return gcd(b % a, a)
+
 
 def multiplicative_inverse(e, phi):
     """
@@ -52,6 +53,7 @@ def multiplicative_inverse(e, phi):
     else:
         return x0 % f2
 
+
 def generate_keypair(p, q):
     if not (is_prime(p) and is_prime(q)):
         raise ValueError('Both numbers must be prime.')
@@ -60,9 +62,11 @@ def generate_keypair(p, q):
 
     # n = pq
     # PUT YOUR CODE HERE
+    n = p*q
 
     # phi = (p-1)(q-1)
     # PUT YOUR CODE HERE
+    phi = (p-1)*(q-1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
