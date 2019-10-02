@@ -48,5 +48,5 @@ def decrypt_caesar(ciphertext):
             plaintext += chr((ord(ch) - 3 - 65) % 26 + 65)
         else:
             plaintext += chr((ord(ch) - 3 - 97) % 26 + 97)
-    
+
     return plaintext
