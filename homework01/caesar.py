@@ -11,11 +11,9 @@ def encrypt_caesar(plaintext):
     >>> encrypt_caesar("")
     ''
     """
-    # PUT YOUR CODE HERE
     ciphertext = ''
-    symbols = '1234567890.,/!@#$%^&*()_-+={}[] '
     for ch in plaintext:
-        if ch in symbols:
+        if not ch.isalpha():
             ciphertext += ch
         elif ch.isupper():
             ciphertext += chr((ord(ch) + 3 - 65) % 26 + 65)
@@ -38,11 +36,9 @@ def decrypt_caesar(ciphertext):
     >>> decrypt_caesar("")
     ''
     """
-    # PUT YOUR CODE HERE
     plaintext = ''
-    symbols = '1234567890.,/!@#$%^&*()_-+={}[] '
     for ch in ciphertext:
-        if ch in symbols:
+        if not ch.isalpha():
             plaintext += ch
         elif ch.isupper():
             plaintext += chr((ord(ch) - 3 - 65) % 26 + 65)
