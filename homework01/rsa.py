@@ -12,7 +12,6 @@ def is_prime(n):
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
     return (2 ** n - 2) % n == 0
 
 
@@ -25,7 +24,6 @@ def gcd(a, b):
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
     if a == 0:
         return b
     else:
@@ -40,7 +38,6 @@ def multiplicative_inverse(e, phi):
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
     f1 = e
     f2 = phi
     x0, x1, y0, y1 = 0, 1, 1, 0
@@ -60,12 +57,7 @@ def generate_keypair(p, q):
     elif p == q:
         raise ValueError('p and q cannot be equal')
 
-    # n = pq
-    # PUT YOUR CODE HERE
     n = p*q
-
-    # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
     phi = (p-1)*(q-1)
 
     # Choose an integer e such that e and phi(n) are coprime
