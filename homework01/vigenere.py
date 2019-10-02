@@ -12,7 +12,7 @@ def encrypt_vigenere(plaintext, keyword):
     # PUT YOUR CODE HERE
     ciphertext = ''
     if len(plaintext) > len(keyword):
-        keyword += keyword*((len(plaintext) // len(keyword))-1)
+        keyword *= len(plaintext) // len(keyword)
         keyword += keyword[:(len(plaintext) % len(keyword))]
     i = 0
     for ch in plaintext:
@@ -43,7 +43,7 @@ def decrypt_vigenere(ciphertext, keyword):
     # PUT YOUR CODE HERE
     plaintext = ''
     if len(ciphertext) > len(keyword):
-        keyword += keyword*((len(ciphertext) // len(keyword))-1)
+        keyword *= len(ciphertext) // len(keyword)
         keyword += keyword[:(len(ciphertext) % len(keyword))]
     i = 0
     for ch in ciphertext:
