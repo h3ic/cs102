@@ -129,7 +129,7 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
         if solution:
             return solution
     grid[x[0]][x[1]] = '.'
-    
+
 
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
@@ -177,7 +177,7 @@ def generate_sudoku(N: int) -> List[List[str]]:
         N = 81
 
     while N:
-        x = (r.randint(0,8), r.randint(0,8))
+        x = (r.randint(0, 8), r.randint(0, 8))
         if grid[x[0]][x[1]] != '.':
             grid[x[0]][x[1]] = '.'
             N -= 1
@@ -187,10 +187,9 @@ def generate_sudoku(N: int) -> List[List[str]]:
 if __name__ == '__main__':
     for fname in ['puzzle1.txt', 'puzzle2.txt', 'puzzle3.txt']:
         grid = read_sudoku(fname)
-        #display(grid)
+        display(grid)
         solution = solve(grid)
         if not solution:
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
-    print(generate_sudoku(40))
