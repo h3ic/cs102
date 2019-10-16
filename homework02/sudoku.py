@@ -1,4 +1,5 @@
 from typing import Tuple, List, Set, Optional
+import random as r
 
 
 def read_sudoku(filename: str) -> List[List[str]]:
@@ -54,7 +55,7 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    return [grid [i][pos[1]] for i in range(0, len(grid))]
+    return [grid[i][pos[1]] for i in range(0, len(grid))]
 
 
 def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -68,7 +69,8 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    pass
+    d = [i // 3 * 3 for i in pos]
+    return [grid[d[0] + r][d[1] + c] for r in range(3) for c in range(3)]
 
 
 def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
@@ -81,7 +83,10 @@ def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pass
+    for i in range(len(grid)):
+        for j in range(len(grid)):
+            if grid[i][j] == '.':
+                return (i, j)
 
 
 def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str]:
@@ -95,7 +100,10 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     >>> values == {'2', '5', '9'}
     True
     """
-    pass
+    return set('123456789') - \
+        set(get_row(grid, pos)) - \
+        set(get_col(grid, pos)) - \
+        set(get_block(grid, pos))
 
 
 def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
@@ -111,13 +119,31 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
-
+    if not find_empty_positions(grid):
+        return grid
+    x = find_empty_positions(grid)
+    pos_val = find_possible_values(grid, x)
+    for q in pos_val:
+        grid[x[0]][x[1]] = q
+        solution = solve(grid)
+        if solution:
+            return solution
+    grid[x[0]][x[1]] = '.'
+    
 
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
-    pass
+
+    for i in range(len(solution)):
+        for j in range(len(solution)):
+            x = (i, j)
+            if set(get_row(solution, x)) != set('123456789'):
+                return False
+            elif set(get_col(solution, x)) != set('123456789'):
+                return False
+            elif set(get_row(solution, x)) != set('123456789'):
+                return False
+    return True
 
 
 def generate_sudoku(N: int) -> List[List[str]]:
@@ -142,15 +168,29 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+    grid = solve([['.'] * 9 for _ in range(9)])
+    if N in range(1, 81):
+        N = 81 - N
+    elif N > 81:
+        N = 0
+    elif N == 0:
+        N = 81
+
+    while N:
+        x = (r.randint(0,8), r.randint(0,8))
+        if grid[x[0]][x[1]] != '.':
+            grid[x[0]][x[1]] = '.'
+            N -= 1
+    return grid
 
 
 if __name__ == '__main__':
     for fname in ['puzzle1.txt', 'puzzle2.txt', 'puzzle3.txt']:
         grid = read_sudoku(fname)
-        display(grid)
+        #display(grid)
         solution = solve(grid)
         if not solution:
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+    print(generate_sudoku(40))
