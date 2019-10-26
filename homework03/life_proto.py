@@ -1,5 +1,5 @@
 import pygame
-import random
+import random as r
 
 from pygame.locals import *
 from typing import List, Tuple
@@ -81,13 +81,36 @@ class GameOfLife:
         out : Grid
             Матрица клеток размером `cell_height` х `cell_width`.
         """
-        pass
+        '''
+        Grid = []
+        for _ in range(self.cell_height):
+            for _ in range(self.cell_width):
+                if randomize:
+                    Grid[][] = r.randint(0, 1)
+                else:
+                    Grid[i][j] = 0
+
+        return Grid
+        '''
+        if randomize:
+            return [[r.randint(0, 1)] * self.cell_width for _ in range(self.cell_height)]
+        else:
+            return [[0] * self.cell_width for _ in range(self.cell_height)]
 
     def draw_grid(self) -> None:
         """
         Отрисовка списка клеток с закрашиванием их в соответствующе цвета.
         """
-        pass
+        grid = self.create_grid()
+        for x in range(len(grid)):
+            for y in range(len(grid)):
+                if grid[x][y] == 1:
+                    pygame.Color('green')
+                    pygame.draw.rect(x, y, self.width, self.height)
+                elif grid[x][y] == 0:
+                    pygame.Color('white')
+                    pygame.draw.rect(x, y, self.width, self.height)
+
 
     def get_neighbours(self, cell: Cell) -> Cells:
         """
@@ -119,3 +142,6 @@ class GameOfLife:
             Новое поколение клеток.
         """
         pass
+
+#if __name__ == '__main__':
+#    print(GameOfLife.create_grid)
