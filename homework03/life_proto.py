@@ -58,6 +58,7 @@ class GameOfLife:
             # Отрисовка списка клеток
             # Выполнение одного шага игры (обновление состояния ячеек)
             # PUT YOUR CODE HERE
+            self.draw_grid()
 
             pygame.display.flip()
             clock.tick(self.speed)
@@ -130,7 +131,15 @@ class GameOfLife:
         out : Cells
             Список соседних клеток.
         """
-        pass
+        row, col = cell
+        for x in range(row - 1, row + 2):
+            for y in range(col - 1, col + 2):
+                if (x, y) != cell and x >= 0 and y >= 0 and - \
+                x < len(self.create_grid) and y < len(self.create_grid[0]):
+                    z = (x, y)
+                    cells.extend(z)
+        return cells
+
 
     def get_next_generation(self) -> Grid:
         """
