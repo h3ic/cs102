@@ -23,14 +23,13 @@ class GameOfLife:
         # Предыдущее поколение клеток
         self.prev_generation = self.create_grid()
         # Текущее поколение клеток
-        self.curr_generation = self.create_grid(randomize=randomize)
+        self.curr_generation = self.create_grid(randomize=True)
         # Максимальное число поколений
         self.max_generations = max_generations
         # Текущее число поколений
         self.generations = 1
 
     def create_grid(self, randomize: bool=False) -> Grid:
-
         if randomize:
             return [[random.randint(0, 1) for _ in range(self.rows)]
             for _ in range(self.cols)]
@@ -88,10 +87,20 @@ class GameOfLife:
         """
         Прочитать состояние клеток из указанного файла.
         """
-        pass
+        num_lines = sum(1 for line in open(filename))
+        value = [c for c in open(filename).read() if c in '10']
+        values = list(map(int, value))
+        values = [values[i:i+num_lines] for i in range(0, len(values), num_lines)]
+        life = GameOfLife((len(values), len(values[0])))
+        life.curr_generation = values
+
+        return life
 
     def save(filename: pathlib.Path) -> None:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        pass
+        result = open(filename, 'w')
+        for i in range(len(self.curr_generation)):
+            result.write(''.join(map(str, self.curr_generation[i])) + '\n')
+        result.close()
