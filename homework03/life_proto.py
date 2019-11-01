@@ -13,7 +13,7 @@ Grid = List[Cells]
 
 class GameOfLife:
 
-    def __init__(self, width: int=640, height: int=480, cell_size: int=160, speed: int=1) -> None:
+    def __init__(self, width: int=640, height: int=480, cell_size: int=10, speed: int=10) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -100,7 +100,7 @@ class GameOfLife:
             x = 0
             y += a
             for j in range(len(self.grid[i])):
-                if self.grid[i][j] == 1:
+                if self.grid[i][j]:
                     pygame.draw.rect(self.screen, pygame.Color('green'),
                                     (x + 1, y + 1, a - 1, a - 1))
                 else:
