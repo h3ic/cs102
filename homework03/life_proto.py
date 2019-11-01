@@ -13,7 +13,7 @@ Grid = List[Cells]
 
 class GameOfLife:
 
-    def __init__(self, width: int=640, height: int=480, cell_size: int=10, speed: int=10) -> None:
+    def __init__(self, width: int=640, height: int=480, cell_size: int=160, speed: int=1) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -127,7 +127,6 @@ class GameOfLife:
             Список соседних клеток.
         """
         i, j = cell
-        neighbours = []
 
         neighbours = [self.grid[x][y] for x in range(i - 1, i + 2)
                 for y in range(j - 1, j + 2) if (x, y) != cell and x >= 0
@@ -154,10 +153,8 @@ class GameOfLife:
                 else:
                     if alive == 3:
                         nextg[i][j] = 1
-        self.grid = nextg
 
-        return self.grid
-
+        return nextg
 
 if __name__ == '__main__':
     game = GameOfLife()
