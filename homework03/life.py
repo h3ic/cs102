@@ -48,11 +48,11 @@ class GameOfLife:
 
     def get_next_generation(self) -> Grid:
         nextg = copy.deepcopy(self.curr_generation)
-        for i in range(self.rows):
-            for j in range(self.cols):
+        for i in range(len(self.curr_generation)):
+            for j in range(len(self.curr_generation[i])):
                 alive = sum(self.get_neighbours((i, j)))
                 if self.curr_generation[i][j]:
-                    if not alive == 2 and not alive == 3:
+                    if alive != 2 and alive != 3:
                         nextg[i][j] = 0
                 else:
                     if alive == 3:
@@ -90,9 +90,9 @@ class GameOfLife:
         num_lines = sum(1 for line in open(filename))
         value = [c for c in open(filename).read() if c in '10']
         values = list(map(int, value))
-        values = [values[i:i+num_lines] for i in range(0, len(values), num_lines)]
-        life = GameOfLife((len(values), len(values[0])))
-        life.curr_generation = values
+        v = [values[i:i+num_lines] for i in range(0, len(values), num_lines)]
+        life = GameOfLife((len(v), len(v[0])))
+        life.curr_generation = v
 
         return life
 
