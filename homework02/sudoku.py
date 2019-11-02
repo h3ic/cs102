@@ -1,6 +1,6 @@
 from typing import Tuple, List, Set, Optional
 import random as r
-
+from pprint import pprint as pp
 
 def read_sudoku(filename: str) -> List[List[str]]:
     """ Прочитать Судоку из указанного файла """
@@ -169,6 +169,7 @@ def generate_sudoku(N: int) -> List[List[str]]:
     True
     """
     grid = solve([['.'] * 9 for _ in range(9)])
+    pp(grid)
     if N in range(1, 81):
         N = 81 - N
     elif N > 81:
@@ -176,8 +177,8 @@ def generate_sudoku(N: int) -> List[List[str]]:
     elif N == 0:
         N = 81
 
-    while N:
-        x = (r.randint(0, 8), r.randint(0, 8))
+    while N:                        
+        x  = (r.randint(0, 8), r.randint(0, 8))
         if grid[x[0]][x[1]] != '.':
             grid[x[0]][x[1]] = '.'
             N -= 1
@@ -193,3 +194,4 @@ if __name__ == '__main__':
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+    print(generate_sudoku(40))
