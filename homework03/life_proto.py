@@ -54,12 +54,12 @@ class GameOfLife:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     running = False
-            self.draw_lines()
 
+            self.draw_lines()
             # Отрисовка списка клеток
             self.draw_grid()
             # Выполнение одного шага игры (обновление состояния ячеек)
-            self.get_next_generation()
+            self.grid = copy.deepcopy(self.get_next_generation())
 
             pygame.display.flip()
             clock.tick(self.speed)
@@ -148,12 +148,11 @@ class GameOfLife:
             for j in range(self.cell_width):
                 alive = sum(self.get_neighbours((i, j)))
                 if self.grid[i][j]:
-                    if not alive == 2 and not alive == 3:
+                    if alive != 2 and alive != 3:
                         nextg[i][j] = 0
                 else:
                     if alive == 3:
                         nextg[i][j] = 1
-
         return nextg
 
 if __name__ == '__main__':
