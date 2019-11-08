@@ -31,8 +31,10 @@ class GameOfLife:
 
     def create_grid(self, randomize: bool=False) -> Grid:
         if randomize:
-            return [[random.randint(0, 1) for _ in range(self.rows)]
-            for _ in range(self.cols)]
+            return [
+                [random.randint(0, 1) for _ in range(self.rows)]
+                for _ in range(self.cols)
+            ]
         else:
             return [[0] * self.rows for _ in range(self.cols)]
 
@@ -64,16 +66,17 @@ class GameOfLife:
         """
         Выполнить один шаг игры.
         """
-        self.prev_generation = self.curr_generation
-        self.curr_generation = self.get_next_generation()
-        self.generations += 1
+        if self.is_max_generations_exceeded:
+            self.prev_generation = self.curr_generation
+            self.curr_generation = self.get_next_generation()
+            self.generations += 1
 
     @property
     def is_max_generations_exceeded(self) -> bool:
         """
         Не превысило ли текущее число поколений максимально допустимое.
         """
-        return self.max_generations == self.generations
+        return self.max_generations >= self.generations
 
     @property
     def is_changing(self) -> bool:
@@ -87,20 +90,21 @@ class GameOfLife:
         """
         Прочитать состояние клеток из указанного файла.
         """
-        num_lines = sum(1 for line in open(filename))
-        value = [c for c in open(filename).read() if c in '10']
-        values = list(map(int, value))
-        v = [values[i:i+num_lines] for i in range(0, len(values), num_lines)]
-        life = GameOfLife((len(v), len(v[0])))
-        life.curr_generation = v
+        with open(filename) as f:
+            grid = [
+                [int(ch) for ch in line if ch in '01']
+                for line in f
+            ]
+        life = GameOfLife((len(grid), len(grid[0])))
+        life.curr_generation = grid
 
         return life
 
-    def save(filename: pathlib.Path) -> None:
+    def save(self, filename: pathlib.Path) -> None:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        result = open(filename, 'w')
-        for i in range(len(self.curr_generation)):
-            result.write(''.join(map(str, self.curr_generation[i])) + '\n')
-        result.close()
+        with open(filename, 'w') as f:
+            for i in range(len(self.curr_generation)):
+                f.write(''.join(map(str, self.curr_generation[i])) + '\n')
+
