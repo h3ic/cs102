@@ -65,7 +65,7 @@ class GUI(UI):
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             self.paused = not self.paused
-                    elif event.type == pygame.MOUSEBUTTONUP:
+                    elif self.paused and event.type == pygame.MOUSEBUTTONUP:
                         x, y = event.pos
                         x //= self.cell_size
                         y //= self.cell_size
@@ -88,5 +88,5 @@ class GUI(UI):
         pygame.quit()
 
 if __name__ == '__main__':
-    ui = GUI(GameOfLife((64, 48), True, 100))
+    ui = GUI(GameOfLife((64, 48), True))
     ui.run()
