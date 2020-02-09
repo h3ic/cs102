@@ -1,45 +1,56 @@
 import requests
 from bs4 import BeautifulSoup
 from backoff import get
+import re 
 
 
 def extract_news(parser):
-    """ Extract news from a given web page """
-    news = {} 
 
-    title = parser.find('tr', attrs={'class': 'athing'})
-    title_a_list = title.find_all('a')
+    raw_urls = parser.find_all('span', attrs={'class': 'sitebit comhead'})
+    if len(raw_urls) < 30:
+        return None
+    raw_titles = parser.find_all('a', attrs={'class': 'storylink'})
+    raw_points = parser.find_all('span', attrs={'class': 'score'})
+    raw_authors = parser.find_all('a', attrs={'class': 'hnuser'})
+    raw_comments = parser.find_all('a', string=['comments'])
+    subtext = parser.find_all('td', attrs={'class': 'subtext'})
+    news, titles, urls, authors, comments, points = [], [], [], [], [], []
 
-    news['title'] = title_a_list[1].text
-    news['url'] = title_a_list[2].text
+    for i in range(30):
+        titles.append(raw_titles[i].text)
+        url_text = raw_urls[i].text
+        urls.append(re.sub(r'[() ]', '', url_text))
+        points.append(raw_points[i].text.replace(' points', ''))
+        authors.append(raw_authors[i].text)
 
-    subtext = parser.find('td', attrs={'class': 'subtext'})
-    subtext_a_list = subtext.find_all('a')
+        subtext_a = subtext[i].find_all('a')
+        comment = subtext_a[-1].text
+        if comment == 'discuss':
+            comment = '0'
+        elif comment == '1 comment':
+            comment = '1'
+        else:
+            comment = comment.replace('comments', '')
+        comments.append(comment.replace('\xa0', ''))
 
-    comments = subtext_a_list[-1].text
-
-    if comments == 'discuss':
-        comments = '0'
-    else:
-        print(comments)
-        comments = comments.replace('comments', '')
-
-    news['author'] = subtext.a.text
-    news['comments'] = comments.replace('\xa0', '') 
-    news['points'] = subtext.span.text.replace(' points', '')
+        item = {}
+        item['title'] = titles[i] 
+        item['url'] = urls[i]
+        item['author'] = authors[i]
+        item['comments'] = comments[i]
+        item['points'] = points[i]
+        news.append(item)
 
     return news
 
 def extract_next_page(parser):
-    """ Extract next page URL """
 
      
-
     return next_page
 
 
 def get_news(url, n_pages=1):
-    """ Collect news from a given web page """
+
     news = []
     while n_pages:
         print("Collecting data from page: {}".format(url))
@@ -49,7 +60,7 @@ def get_news(url, n_pages=1):
         next_page = extract_next_page(soup)
         url = "https://news.ycombinator.com/" + next_page
         news_list.extend(news)
-        n_pages-= 1
+        n_pages -= 1
 
     return news_list
 
