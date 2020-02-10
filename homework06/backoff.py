@@ -1,3 +1,7 @@
+import requests
+import time
+
+
 def get(url, params={}, timeout=500, max_retries=10, backoff_factor=0.3):
 
     try:
