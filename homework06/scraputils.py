@@ -5,35 +5,44 @@ import re
 
 def extract_news(parser):
 
-    raw_urls = parser.find_all('span', attrs={'class': 'sitebit comhead'})
-    max_news = len(raw_urls)
-    raw_titles = parser.find_all('a', attrs={'class': 'storylink'},
-                                 limit=max_news)
-    raw_points = parser.find_all('span', attrs={'class': 'score'},
-                                 limit=max_news)
-    raw_authors = parser.find_all('a', attrs={'class': 'hnuser'},
-                                  limit=max_news)
-    raw_comments = parser.find_all('a', string=['comments'],
-                                   limit=max_news)
-    subtext = parser.find_all('td', attrs={'class': 'subtext'},
-                              limit=max_news)
+    raw_titles = parser.find_all('a', attrs={'class': 'storylink'})
+    subtext = parser.find_all('td', attrs={'class': 'subtext'})
     news, titles, urls, authors, comments, points = [], [], [], [], [], []
 
-    for i in range(max_news):
+    for i in range(30):
         titles.append(raw_titles[i].text)
-        url_text = raw_urls[i].text
-        urls.append(re.sub(r'[() ]', '', url_text))
-        points.append(raw_points[i].text.replace(' points', ''))
-        authors.append(raw_authors[i].text)
+        url = raw_titles[i].find_next_sibling('span')
+        try:
+            url = url.text
+        except AttributeError:
+           url = 'N/A'
+        urls.append(re.sub(r'[() ]', '', url))
 
-        subtext_a = subtext[i].find_all('a')
-        comment = subtext_a[-1].text
-        if comment == 'discuss':
-            comment = '0'
-        elif comment == '1 comment':
-            comment = '1'
-        else:
-            comment = comment.replace('comments', '')
+        rank = subtext[i].find('span', attrs={'class': 'score'})
+        try:
+            points.append(rank.text.replace(' points', ''))
+        except AttributeError:
+            points.append('N/A')
+
+        author = subtext[i].find('a', attrs={'class': 'hnuser'})
+        try:
+            authors.append(author.text)
+        except AttributeError:
+            authors.append('N/A')
+
+        hide = subtext[i].find('a', string='hide')
+        comment = hide.find_next_sibling('a')
+        try:
+            comment = comment.text
+            if comment == 'discuss':
+                comment = '0'
+            elif 's' not in comment:
+                comment = '1'
+            else:
+                comment = comment.replace('comments', '')
+        except AttributeError:
+            comment = 'N/A'
+
         comments.append(comment.replace('\xa0', ''))
 
         item = {}
@@ -56,10 +65,9 @@ def get_news(n_pages=1, url='https://news.ycombinator.com/news'):
         response = get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         news = extract_news(soup)
-        # print(news)
         url = 'https://news.ycombinator.com/news?p=' + str(max - n_pages + 2)
-        news_list.extend(news)
         n_pages -= 1
+        news_list.extend(news)
 
     return news_list
 
