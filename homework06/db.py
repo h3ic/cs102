@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from scraputils import get_news
+import sys
 
 Base = declarative_base()
 engine = create_engine('sqlite:///news.db')
@@ -22,9 +23,17 @@ class News(Base):
 
 Base.metadata.create_all(bind=engine)
 
-if __name__ == '__main__':
+def fill_db(n_pages):
+    decision = input('Proceed? This will overwrite the existing news.db! y/n? ')
+    if decision == 'y':
+        pass
+    elif decision == 'n':
+        sys.exit()
+    else:
+        sys.exit('Bad input')
+
     s = session()
-    data = get_news(20)
+    data = get_news(n_pages)
     for i in range(len(data)): 
         news = News(title=data[i]['title'], 
                   author=data[i]['author'], 
@@ -34,4 +43,7 @@ if __name__ == '__main__':
                   ) 
         s.add(news)
         s.commit()
-    print(len(data))
+    print('News added: ', len(data))
+
+if __name__ == '__main__':
+    fill_db(20)
