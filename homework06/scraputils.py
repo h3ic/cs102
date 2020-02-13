@@ -9,7 +9,7 @@ def extract_news(parser):
     subtext = parser.find_all('td', attrs={'class': 'subtext'})
     news, titles, urls, authors, comments, points = [], [], [], [], [], []
 
-    for i in range(30):
+    for i in range(len(raw_titles)):
         titles.append(raw_titles[i].text)
         url = raw_titles[i].find_next_sibling('span')
         try:
