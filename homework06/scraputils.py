@@ -10,13 +10,10 @@ def extract_news(parser):
     news, titles, urls, authors, comments, points = [], [], [], [], [], []
 
     for i in range(len(raw_titles)):
+
         titles.append(raw_titles[i].text)
-        url = raw_titles[i].find_next_sibling('span')
-        try:
-            url = url.text
-        except AttributeError:
-           url = 'N/A'
-        urls.append(re.sub(r'[() ]', '', url))
+        url = raw_titles[i]['href']
+        urls.append(url)
 
         rank = subtext[i].find('span', attrs={'class': 'score'})
         try:
@@ -73,4 +70,5 @@ def get_news(n_pages=1, url='https://news.ycombinator.com/news'):
 
 
 if __name__ == '__main__':
-    print(get_news(5))
+    # print(get_news(5))
+    get_news(1)
