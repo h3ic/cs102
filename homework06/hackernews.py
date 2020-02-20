@@ -9,6 +9,7 @@ from bayes import NaiveBayesClassifier
 
 s = session()
 
+@route("/")
 @route('/news')
 def news_list():
     rows = s.query(News).filter(News.label == None).all()
@@ -53,39 +54,30 @@ def update_news():
 @route('/classify')
 def classify_news():
     model = NaiveBayesClassifier()
-    X_train, y_train, news_list, arranged_news = [], [], [], []
-
     classified_news = s.query(News).filter(News.label != None).all()
-    for i, entry in enumerate(classified_news):
-        #X_train.append({})
-        #X_train[i]['title'] = entry.title
-        X_train.append(entry.title)
-        y_train.append(entry.label)
-    model.fit(X_train, y_train)
+    X = [entry.title for entry in classified_news]
+    y = [entry.label for entry in classified_news]
+    model.fit(X, y)
 
     news_to_classify = s.query(News).filter(News.label == None).all()
-    for i, entry in enumerate(news_to_classify):
-        news_list.append(entry.title)
+    titles = [entry.title for entry in news_to_classify]
+    classification = model.predict(titles)
+    news_to_arrange = zip(news_to_classify, classification)
 
-    classification = model.predict(news_list)
-    for i, news in enumerate(classification):
-        title = news[0]
+    arranged_news = []
+    for i, news in enumerate(news_to_arrange):
+        entry = news[0]
         if news[1] == 'good':
             num_label = 1
         elif news[1] == 'maybe':
             num_label = 2
         elif news[1] == 'never':
             num_label = 3
-        arranged_news.append((title, num_label))
-
+        arranged_news.append((entry, num_label))
     arranged_news.sort(key=lambda x: x[1])
-    for news in arranged_news:
-        recommendation.append(news[0])
+    recommendation = [news[0] for news in arranged_news]
 
-    return recommendation 
-
-    #return template('news_recommendations', rows=arranged_news)
+    return template('news_template', rows=recommendation)
 
 if __name__ == '__main__':
     run(host='localhost', port=8080)
-    print(classify_news())
