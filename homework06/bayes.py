@@ -1,7 +1,6 @@
 from math import log
 from collections import Counter, defaultdict
 from normalize import normalize
-import time
 
 
 class NaiveBayesClassifier:
@@ -22,8 +21,8 @@ class NaiveBayesClassifier:
                 self.words[word][class_]['appearances'] += 1
 
         for class_ in self.classes:
-            self.classes[class_]['prior'] = self.classes_counter[class_]
-            / len(y)
+            self.classes[class_]['prior'] = self.classes_counter[class_] / \
+                len(y)
         words_counter = dict(Counter(all_words))
         vector_size = len(Counter(all_words))
 
@@ -48,7 +47,7 @@ class NaiveBayesClassifier:
                                           ['probability']
                                           )
                 probabilities.append((class_, title_prob))
-            classification.append(max(probabilities, key=lambda x: x[1]))
+            classification.append(max(probabilities, key=lambda x: x[1])[0])
         return classification
 
     def score(self, X_test, y_test):
