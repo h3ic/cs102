@@ -6,8 +6,8 @@ from scraputils import get_news
 from db import News, session
 from bayes import NaiveBayesClassifier
 
-
 s = session()
+
 
 @route("/")
 @route('/news')
@@ -78,6 +78,7 @@ def classify_news():
     recommendation = [news[0] for news in arranged_news]
 
     return template('news_template', rows=recommendation)
+
 
 if __name__ == '__main__':
     run(host='localhost', port=8080)
