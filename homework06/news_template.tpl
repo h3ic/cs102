@@ -6,6 +6,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.js"></script>
     </head>
     <body>
+	<a href="/classify" class="ui right floated small primary button">Recommendations</a>
         <div class="ui container" style="padding-top: 10px;">
         <table class="ui celled table">
             <thead>
