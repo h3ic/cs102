@@ -34,12 +34,12 @@ def fill_db(n_pages):
 
     s = session()
     data = get_news(n_pages)
-    for i in range(len(data)): 
-        news = News(title=data[i]['title'], 
-                  author=data[i]['author'], 
-                  url=data[i]['url'], 
-                  comments=data[i]['comments'], 
-                  points=data[i]['points']
+    for i, entry in enumerate(data): 
+        news = News(title=entry['title'], 
+                  author=entry['author'], 
+                  url=entry['url'], 
+                  comments=entry['comments'], 
+                  points=entry['points']
                   ) 
         s.add(news)
         s.commit()

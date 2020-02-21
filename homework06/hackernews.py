@@ -28,20 +28,20 @@ def dd_label():
 
 @route('/update')
 def update_news():
-    data = get_news(1)
+    data = get_news(2)
     added = 0
-    for i in range(len(data)):
-        title = data[i]['title']  # enumerate
-        author = data[i]['author']
+    for i, entry in enumerate(data):
+        title = entry['title']
+        author = entry['author']
         news_in_db = s.query(News).filter(
             News.title == title, News.author == author
         ).all()
         if len(news_in_db) == 0:
-            news = News(title=data[i]['title'],
-                        author=data[i]['author'],
-                        url=data[i]['url'],
-                        comments=data[i]['comments'],
-                        points=data[i]['points']
+            news = News(title=entry['title'],
+                        author=entry['author'],
+                        url=entry['url'],
+                        comments=entry['comments'],
+                        points=entry['points']
                         )
             s.add(news)
             s.commit()
