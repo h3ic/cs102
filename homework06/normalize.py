@@ -15,3 +15,5 @@ def normalize(text):
             word_list.append(lemma)
 
     return word_list 
+
+print(normalize('LOL'))

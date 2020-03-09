@@ -19,8 +19,8 @@ def news_list():
 @route('/add_label/')
 def dd_label():
     label = request.query.label
-    id = request.query.id
-    row = s.query(News).filter(News.id == id).one()
+    label_id = request.query.id
+    row = s.query(News).get(News.id == label_id)
     row.label = label
     s.commit()
     redirect('/news')
@@ -32,11 +32,11 @@ def update_news():
     added = 0
     for i, entry in enumerate(data):
         title = entry['title']
-        author = entry['author']
+        author =entry.get('author')
         news_in_db = s.query(News).filter(
             News.title == title, News.author == author
         ).all()
-        if len(news_in_db) == 0:
+        if len(news_in_db) == 0:  # check latest entry (if none found)
             news = News(title=entry['title'],
                         author=entry['author'],
                         url=entry['url'],
